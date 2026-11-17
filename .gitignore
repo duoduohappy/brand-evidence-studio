@@ -1,0 +1,10 @@
+node_modules/
+cms/node_modules/
+runtime/
+cms/.tmp/
+cms/.cache/
+cms/build/
+cms/dist/
+cms/.strapi/
+.env
+*.log

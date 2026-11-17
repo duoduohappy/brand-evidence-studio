@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: brand-evidence-studio
+    runtime: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: DEPLOY_MODE
+        value: cloud
+      - key: CMS_TOKEN
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0

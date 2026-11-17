@@ -1,0 +1,1 @@
+module.exports=({env})=>({serveAdminPanel:false,auth:{secret:env('CMS_TOKEN')+'-admin'},apiToken:{salt:env('CMS_TOKEN')+'-api'},transfer:{token:{salt:env('CMS_TOKEN')+'-transfer'}},secrets:{encryptionKey:env('CMS_TOKEN')}});
