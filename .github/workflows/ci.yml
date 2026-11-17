@@ -12,3 +12,26 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: node --check server.mjs && node --check public/app.js
+  container:
+    runs-on: ubuntu-latest
+    needs: test
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: docker build -t brand-evidence-studio .
+      - name: Start complete stack with a 512 MiB memory limit
+        run: docker run -d --name studio --memory=512m -p 18781:10000 -e PUBLIC_ORIGIN=http://127.0.0.1:18781 -e CMS_TOKEN="$(openssl rand -hex 32)" brand-evidence-studio
+      - name: Wait for application and CMS
+        run: |
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:18781/healthz; then exit 0; fi
+            sleep 2
+          done
+          docker logs studio
+          exit 1
+      - run: node tests/hosted-integration.mjs
+      - if: always()
+        run: docker logs studio
